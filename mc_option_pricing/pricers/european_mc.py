@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass
+from typing import Any, cast
 
 import numpy as np
 import numpy.typing as npt
 from scipy.stats import norm
-from typing import Any, cast
 
 from ..config import MarketParams, SimulationParams
 from ..models.gbm import GBMModel

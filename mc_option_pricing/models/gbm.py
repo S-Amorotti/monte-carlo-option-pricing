@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any, cast
 
 import numpy as np
 import numpy.typing as npt
-from typing import Any, cast
 
 from ..config import MarketParams, SimulationParams
 from .base import ModelParams

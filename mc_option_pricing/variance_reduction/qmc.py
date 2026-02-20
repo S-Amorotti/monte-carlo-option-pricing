@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+from typing import cast
+
 import numpy as np
 import numpy.typing as npt
 from scipy.stats import norm
 from scipy.stats.qmc import Sobol
-from typing import Any, cast
 
 
 def sobol_normals(
