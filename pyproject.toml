@@ -1,0 +1,45 @@
+[project]
+name = "mc-option-pricing"
+version = "0.1.0"
+description = "Production-grade Monte Carlo option pricing library"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Sean Amorotti"}]
+keywords = ["quant", "monte carlo", "options", "derivatives"]
+
+dependencies = [
+  "numpy>=1.24",
+  "scipy>=1.10",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.4",
+  "hypothesis>=6.98",
+  "ruff>=0.4",
+  "mypy>=1.8",
+  "black>=24.0",
+]
+
+[build-system]
+requires = ["hatchling>=1.20"]
+build-backend = "hatchling.build"
+
+[tool.black]
+line-length = 100
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["mc_option_pricing"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = "-q"
