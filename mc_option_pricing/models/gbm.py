@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 import numpy as np
+import numpy.typing as npt
+from typing import Any, cast
 
 from ..config import MarketParams, SimulationParams
 from .base import ModelParams
@@ -28,7 +30,7 @@ class GBMModel:
         sim: SimulationParams,
         rng: np.random.Generator,
         terminal_only: bool = False,
-    ) -> np.ndarray:
+    ) -> npt.NDArray[np.floating[Any]]:
         market.validate()
         sim.validate()
 
@@ -46,7 +48,7 @@ class GBMModel:
         s0 = dtype(market.spot)
         paths = s0 * np.exp(log_paths)
         if terminal_only:
-            return paths[:, -1]
+            return cast(npt.NDArray[np.floating[Any]], paths[:, -1])
 
         paths = np.concatenate([np.full((n_paths, 1), s0, dtype=dtype), paths], axis=1)
-        return paths
+        return cast(npt.NDArray[np.floating[Any]], paths)

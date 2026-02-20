@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+from typing import cast
 
 from scipy.stats import norm
 
@@ -29,13 +30,17 @@ def bs_price(
         sigma * math.sqrt(maturity)
     )
     d2 = d1 - sigma * math.sqrt(maturity)
+    cdf_d1 = float(cast(float, norm.cdf(d1)))
+    cdf_d2 = float(cast(float, norm.cdf(d2)))
+    cdf_neg_d1 = float(cast(float, norm.cdf(-d1)))
+    cdf_neg_d2 = float(cast(float, norm.cdf(-d2)))
 
     if option_type == "call":
-        return spot * math.exp(-dividend * maturity) * norm.cdf(d1) - strike * math.exp(
+        return spot * math.exp(-dividend * maturity) * cdf_d1 - strike * math.exp(
             -rate * maturity
-        ) * norm.cdf(d2)
+        ) * cdf_d2
     if option_type == "put":
-        return strike * math.exp(-rate * maturity) * norm.cdf(-d2) - spot * math.exp(
+        return strike * math.exp(-rate * maturity) * cdf_neg_d2 - spot * math.exp(
             -dividend * maturity
-        ) * norm.cdf(-d1)
+        ) * cdf_neg_d1
     raise ValueError("option_type must be 'call' or 'put'")

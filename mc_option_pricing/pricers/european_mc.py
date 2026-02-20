@@ -4,7 +4,9 @@ import time
 from dataclasses import dataclass
 
 import numpy as np
+import numpy.typing as npt
 from scipy.stats import norm
+from typing import Any, cast
 
 from ..config import MarketParams, SimulationParams
 from ..models.gbm import GBMModel
@@ -105,9 +107,9 @@ class EuropeanMCPricer:
         market: MarketParams,
         sim: SimulationParams,
         payoff: Payoff,
-        payoffs: np.ndarray,
-        terminal: np.ndarray,
-    ) -> np.ndarray:
+        payoffs: npt.NDArray[np.floating[Any]],
+        terminal: npt.NDArray[np.floating[Any]],
+    ) -> npt.NDArray[np.floating[Any]]:
         if not isinstance(model, GBMModel):
             return payoffs
 
@@ -127,17 +129,20 @@ class EuropeanMCPricer:
             option_type=option_type,
         )
         if option_type == "call":
-            control = np.maximum(terminal - strike, 0.0)
+            control = cast(npt.NDArray[np.floating[Any]], np.maximum(terminal - strike, 0.0))
         else:
-            control = np.maximum(strike - terminal, 0.0)
-        return control_variate_adjust(payoffs, control, analytic)
+            control = cast(npt.NDArray[np.floating[Any]], np.maximum(strike - terminal, 0.0))
+        return cast(
+            npt.NDArray[np.floating[Any]],
+            control_variate_adjust(payoffs, control, analytic),
+        )
 
     def _simulate_qmc(
         self,
         model: GBMModel,
         market: MarketParams,
         sim: SimulationParams,
-    ) -> np.ndarray:
+    ) -> npt.NDArray[np.floating[Any]]:
         from ..variance_reduction.qmc import sobol_normals
 
         n_paths = sim.n_paths
@@ -147,7 +152,7 @@ class EuropeanMCPricer:
         drift = (market.rate - market.dividend - 0.5 * model.params.sigma**2) * dt
         vol = model.params.sigma * np.sqrt(dt)
         log_return = drift + vol * z[:, 0]
-        return market.spot * np.exp(log_return)
+        return cast(npt.NDArray[np.floating[Any]], market.spot * np.exp(log_return))
 
     def _simulate_antithetic_gbm(
         self,
@@ -155,7 +160,7 @@ class EuropeanMCPricer:
         market: MarketParams,
         sim: SimulationParams,
         rng: np.random.Generator,
-    ) -> np.ndarray:
+    ) -> npt.NDArray[np.floating[Any]]:
         half = sim.n_paths // 2
         dt = sim.maturity
         z = rng.standard_normal(size=half)
@@ -164,4 +169,4 @@ class EuropeanMCPricer:
         log_return = drift + vol * z
         log_return_anti = drift - vol * z
         terminal = market.spot * np.exp(np.concatenate([log_return, log_return_anti]))
-        return terminal
+        return cast(npt.NDArray[np.floating[Any]], terminal)

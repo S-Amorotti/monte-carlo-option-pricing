@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 import numpy as np
+import numpy.typing as npt
+from typing import Any, cast
 
 from .base import PayoffBase
 
@@ -19,10 +21,12 @@ class AsianArithmeticPayoff(PayoffBase):
         if self.option_type not in {"call", "put"}:
             raise ValueError("option_type must be 'call' or 'put'")
 
-    def __call__(self, paths: np.ndarray) -> np.ndarray:
+    def __call__(
+        self, paths: npt.NDArray[np.floating[Any]]
+    ) -> npt.NDArray[np.floating[Any]]:
         if paths.ndim != 2:
             raise ValueError("paths must be 2D for Asian payoff")
         avg = np.mean(paths[:, 1:], axis=1)
         if self.option_type == "call":
-            return np.maximum(avg - self.strike, 0.0)
-        return np.maximum(self.strike - avg, 0.0)
+            return cast(npt.NDArray[np.floating[Any]], np.maximum(avg - self.strike, 0.0))
+        return cast(npt.NDArray[np.floating[Any]], np.maximum(self.strike - avg, 0.0))

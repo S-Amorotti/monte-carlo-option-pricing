@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 
 @dataclass(frozen=True)
@@ -12,4 +13,4 @@ class PricingResult:
     n_paths: int
     runtime_sec: float
     method: str
-    extra: dict | None = None
+    extra: dict[str, Any] | None = None

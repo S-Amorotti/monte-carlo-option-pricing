@@ -1,16 +1,16 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Any, Protocol
 
 
 @dataclass(frozen=True)
 class CalibrationResult:
-    params: dict
+    params: dict[str, Any]
     objective: float
     success: bool
     message: str
-    extra: dict
+    extra: dict[str, Any]
 
 
 class Calibrator(Protocol):
