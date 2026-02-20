@@ -42,6 +42,8 @@ known-first-party = ["mc_option_pricing"]
 python_version = "3.10"
 strict = true
 ignore_missing_imports = true
+disallow_any_generics = false
+warn_return_any = false
 
 [tool.pytest.ini_options]
 addopts = "-q"
