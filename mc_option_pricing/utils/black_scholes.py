@@ -15,10 +15,15 @@ def bs_price(
     option_type: str,
 ) -> float:
     if maturity <= 0.0:
-        return max(spot - strike, 0.0) if option_type == "call" else max(strike - spot, 0.0)
+        if option_type == "call":
+            return max(spot - strike, 0.0)
+        return max(strike - spot, 0.0)
     if sigma <= 0.0:
         forward = spot * math.exp((rate - dividend) * maturity)
-        return math.exp(-rate * maturity) * max(forward - strike, 0.0) if option_type == "call" else math.exp(-rate * maturity) * max(strike - forward, 0.0)
+        discount = math.exp(-rate * maturity)
+        if option_type == "call":
+            return discount * max(forward - strike, 0.0)
+        return discount * max(strike - forward, 0.0)
 
     d1 = (math.log(spot / strike) + (rate - dividend + 0.5 * sigma**2) * maturity) / (
         sigma * math.sqrt(maturity)

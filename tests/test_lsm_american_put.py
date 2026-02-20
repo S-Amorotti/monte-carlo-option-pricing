@@ -7,7 +7,13 @@ from mc_option_pricing.pricers.lsm_american import LSMAmericanPricer, LSMConfig
 
 
 def american_put_binomial(
-    spot: float, strike: float, rate: float, dividend: float, sigma: float, maturity: float, steps: int
+    spot: float,
+    strike: float,
+    rate: float,
+    dividend: float,
+    sigma: float,
+    maturity: float,
+    steps: int,
 ) -> float:
     dt = maturity / steps
     u = np.exp(sigma * np.sqrt(dt))

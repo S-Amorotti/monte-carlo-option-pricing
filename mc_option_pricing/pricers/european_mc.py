@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass
-from typing import Callable
 
 import numpy as np
 from scipy.stats import norm
@@ -115,8 +114,8 @@ class EuropeanMCPricer:
         if not hasattr(payoff, "strike") or not hasattr(payoff, "option_type"):
             return payoffs
 
-        strike = float(getattr(payoff, "strike"))
-        option_type = str(getattr(payoff, "option_type"))
+        strike = float(payoff.strike)
+        option_type = str(payoff.option_type)
 
         analytic = bs_price(
             spot=market.spot,
@@ -127,7 +126,10 @@ class EuropeanMCPricer:
             sigma=model.params.sigma,
             option_type=option_type,
         )
-        control = np.maximum(terminal - strike, 0.0) if option_type == "call" else np.maximum(strike - terminal, 0.0)
+        if option_type == "call":
+            control = np.maximum(terminal - strike, 0.0)
+        else:
+            control = np.maximum(strike - terminal, 0.0)
         return control_variate_adjust(payoffs, control, analytic)
 
     def _simulate_qmc(

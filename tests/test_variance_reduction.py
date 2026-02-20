@@ -1,5 +1,3 @@
-import numpy as np
-
 from mc_option_pricing.config import MarketParams, SimulationParams
 from mc_option_pricing.models.gbm import GBMModel, GBMParams
 from mc_option_pricing.payoffs.vanilla import VanillaPayoff

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
 
 import numpy as np
 
@@ -26,7 +25,7 @@ class SimulationParams:
     n_paths: int
     n_steps: int
     maturity: float
-    seed: Optional[int] = 12345
+    seed: int | None = 12345
     dtype: str = "float64"
     antithetic: bool = False
     use_control_variate: bool = False
